@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple RPG Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="game-container">
+        <h1>Simple RPG Game</h1>
+        
+        <div id="stats-container">
+            <h2>Player Stats</h2>
+            <p>Loot (Holding): <span id="loot-holding">0</span></p>
+            <p>Loot (Storage): <span id="loot-storage">0</span></p>
+            <p>Gold: <span id="gold">0</span></p>
+            <p>Health: <span id="health">100</span></p>
+            <p>Level: <span id="level">1</span></p>
+            <p>Inventory Space: <span id="inventory-space">10</span></p>
+        </div>
+
+        <div id="actions-container">
+            <h2>Actions</h2>
+            <button id="quest">Go on a Quest</button>
+            <button id="unload">Unload Loot</button>
+            <button id="buy">Buy New Loot</button>
+            <button id="rest">Rest</button>
+        </div>
+
+        <div id="log-container">
+            <h2>Game Log</h2>
+            <div id="log"></div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
