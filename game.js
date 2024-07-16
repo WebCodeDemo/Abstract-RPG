@@ -4,7 +4,7 @@ let player = {
     lootStorage: 0,
     gold: 100,
     health: 100,
-    inventorySpace: 10,
+    maxHealth: 100,
     maxInventorySpace: 10
 };
 
@@ -18,12 +18,14 @@ const REST_HEALTH_GAIN = 30;
 
 // DOM elements
 const lootHoldingEl = document.getElementById('loot-holding');
+const maxInventoryEl = document.getElementById('max-inventory');
 const lootStorageEl = document.getElementById('loot-storage');
 const goldEl = document.getElementById('gold');
 const healthEl = document.getElementById('health');
 const levelEl = document.getElementById('level');
-const inventorySpaceEl = document.getElementById('inventory-space');
 const logEl = document.getElementById('log');
+const inventoryMeterEl = document.getElementById('inventory-meter');
+const healthMeterEl = document.getElementById('health-meter');
 
 // Action buttons
 document.getElementById('quest').addEventListener('click', goOnQuest);
@@ -34,11 +36,26 @@ document.getElementById('rest').addEventListener('click', rest);
 // Update display
 function updateDisplay() {
     lootHoldingEl.textContent = player.lootHolding;
+    maxInventoryEl.textContent = player.maxInventorySpace;
     lootStorageEl.textContent = player.lootStorage;
     goldEl.textContent = player.gold;
     healthEl.textContent = player.health;
     levelEl.textContent = calculateLevel();
-    inventorySpaceEl.textContent = player.inventorySpace;
+
+    // Update inventory meter
+    const inventoryPercentage = (player.lootHolding / player.maxInventorySpace) * 100;
+    inventoryMeterEl.style.width = `${inventoryPercentage}%`;
+
+    // Update health meter
+    const healthPercentage = (player.health / player.maxHealth) * 100;
+    healthMeterEl.style.width = `${healthPercentage}%`;
+    
+    // Change health meter color based on health percentage
+    if (healthPercentage > 50) {
+        healthMeterEl.style.backgroundColor = `hsl(${healthPercentage}, 100%, 40%)`;
+    } else {
+        healthMeterEl.style.backgroundColor = `hsl(0, 100%, ${50 - (50 - healthPercentage) / 2}%)`;
+    }
 }
 
 // Calculate level
@@ -53,9 +70,8 @@ function logMessage(message) {
 
 // Go on a quest
 function goOnQuest() {
-    if (player.inventorySpace >= QUEST_LOOT_GAIN) {
+    if (player.lootHolding + QUEST_LOOT_GAIN <= player.maxInventorySpace) {
         player.lootHolding += QUEST_LOOT_GAIN;
-        player.inventorySpace -= QUEST_LOOT_GAIN;
         player.health -= QUEST_HEALTH_LOSS;
         logMessage(`You went on a quest and gained ${QUEST_LOOT_GAIN} loot!`);
         
@@ -76,7 +92,6 @@ function unloadLoot() {
         
         player.gold += soldItems * UNLOAD_GOLD_PER_ITEM;
         player.lootStorage += storedItems;
-        player.inventorySpace += player.lootHolding;
         player.lootHolding = 0;
         
         logMessage(`Sold ${soldItems} items and stored ${storedItems} items.`);
@@ -88,13 +103,14 @@ function unloadLoot() {
 
 // Buy new loot
 function buyNewLoot() {
-    if (player.gold >= BUY_ITEM_COST && player.inventorySpace > 0) {
+    if (player.gold >= BUY_ITEM_COST && player.lootHolding < player.maxInventorySpace) {
         player.lootHolding++;
-        player.inventorySpace--;
         player.gold -= BUY_ITEM_COST;
         logMessage("Bought a new item!");
+    } else if (player.lootHolding >= player.maxInventorySpace) {
+        logMessage("Inventory is full! Cannot buy more items.");
     } else {
-        logMessage("Not enough gold or inventory space to buy new loot!");
+        logMessage("Not enough gold to buy new loot!");
     }
     updateDisplay();
 }
@@ -103,7 +119,7 @@ function buyNewLoot() {
 function rest() {
     if (player.gold >= REST_COST) {
         player.gold -= REST_COST;
-        player.health = Math.min(100, player.health + REST_HEALTH_GAIN);
+        player.health = Math.min(player.maxHealth, player.health + REST_HEALTH_GAIN);
         logMessage("You rested and recovered some health.");
     } else {
         logMessage("Not enough gold to rest!");
@@ -115,8 +131,7 @@ function rest() {
 function playerPassOut() {
     player.lootHolding = Math.floor(player.lootHolding / 2);
     player.gold = Math.floor(player.gold / 2);
-    player.health = 50;
-    player.inventorySpace = player.maxInventorySpace - player.lootHolding;
+    player.health = Math.floor(player.maxHealth / 2);
     logMessage("You passed out! Lost half your loot and gold.");
 }
 
