@@ -3,21 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple RPG Game</title>
+    <title>Medieval RPG Game</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="game-container">
-        <h1>Simple RPG Game</h1>
+        <h1>Medieval RPG Game</h1>
         
         <div id="stats-container">
             <h2>Player Stats</h2>
-            <p>Loot (Holding): <span id="loot-holding">0</span></p>
-            <p>Loot (Storage): <span id="loot-storage">0</span></p>
+            <p>Items (Holding): <span id="loot-holding">0</span> / <span id="max-inventory">10</span></p>
+            <div class="meter-container">
+                <div id="inventory-meter" class="meter"></div>
+            </div>
+            <p>Items (Storage): <span id="loot-storage">0</span></p>
             <p>Gold: <span id="gold">0</span></p>
-            <p>Health: <span id="health">100</span></p>
+            <p>Health: <span id="health">100</span> / 100</p>
+            <div class="meter-container">
+                <div id="health-meter" class="meter"></div>
+            </div>
             <p>Level: <span id="level">1</span></p>
-            <p>Inventory Space: <span id="inventory-space">10</span></p>
         </div>
 
         <div id="actions-container">
