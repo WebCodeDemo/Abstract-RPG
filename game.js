@@ -459,5 +459,50 @@ function playerPassOut() {
     logMessage("You collapsed from exhaustion! You've lost half your loot and gold, but a kind stranger helped you to safety.");
 }
 
+
+// Add these variables at the top of your file, with your other declarations
+let levelThresholds = [3, 6, 9, 12, 15, 18];
+let storyProgression = [false, false, false, false, false, false];
+
+// Add this function to your file
+function checkLevelProgression(currentLevel) {
+    for (let i = 0; i < levelThresholds.length; i++) {
+        if (currentLevel > levelThresholds[i] && !storyProgression[i]) {
+            storyProgression[i] = true;
+            switch(i) {
+                case 0:
+                    alert("As you grow stronger, you begin to hear whispers of a prophecy about a hero destined to save the world.");
+                    break;
+                case 1:
+                    alert("Your exceptional abilities catch the attention of the royal court. They begin to wonder if you might be the prophesied hero.");
+                    break;
+                case 2:
+                    alert("A wise sage recognizes your potential and reveals more about the prophecy. An evil dragon threatens the world's existence.");
+                    break;
+                case 3:
+                    alert("You meet the princess, who is intrigued by your growing power and the role you might play in saving the kingdom.");
+                    break;
+                case 4:
+                    alert("The evil dragon makes its first move, causing destruction across the land. The people look to you for hope.");
+                    break;
+                case 5:
+                    alert("Congratulations! You've reached the pinnacle of your powers. You defeat the evil dragon in an epic battle, saving the world. The grateful princess offers her hand in marriage, and you live happily ever after.");
+                    break;
+            }
+            break;  // Exit the loop after triggering an alert
+        }
+    }
+}
+
+// Modify your existing calculateLevel function
+function calculateLevel() {
+    let newLevel = Math.round((player.lootHolding + player.lootStorage) / 7);
+    checkLevelProgression(newLevel);
+    return newLevel;
+}
+
+
+
+
 // Initialize game
 updateDisplay();
